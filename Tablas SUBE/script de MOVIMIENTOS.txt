@@ -1,0 +1,14 @@
+create table MOVIMIENTO(
+oid_mov number(10) constraint pk_oid primary key,
+fecha date,
+importe number(10),
+oid_terminal number(10) ,
+oid_cta number(10),
+tipo number(10),
+indice number(10))
+
+alter table movimiento
+add constraint fk_oid_terminal foreign key (oid_terminal) references TERMINAL(OID_TERMINAL)
+
+alter table movimiento
+add constraint fk_oid_cuenta foreign key (oid_cta) references CUENTA(oid_cta)
