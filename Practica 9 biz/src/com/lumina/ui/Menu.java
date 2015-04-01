@@ -38,7 +38,7 @@ public class Menu {
 			if (admin.getNombreAdministrador().equals(nombreUsuario) && admin.getPasswordAdmin().getPassDesencriptada().equals(passwordIngresada)){
 				System.out.println("Encontro admin");
 				adminRegistrado = new Admin();
-				adminRegistrado.setUsuarios(manejadorUsuario.getUsuarios());
+				//adminRegistrado.setUsuarios(manejadorUsuario.getUsuarios());
 				return true;
 			}
 		}
@@ -152,7 +152,7 @@ public class Menu {
 		 if (adminRegistrado != null ){
 				System.out.println("********** MENU DE ADMIN ***********");
 				System.out.println("\t(1) BORAR UN USUARIO");
-				System.out.println("\t(2) DEJAR MENSAJE A MORORSO INCOBRABLE");
+				System.out.println("\t(2) DEJAR MENSAJE A MOROSO ");
 				System.out.println("\t(3)REPORTES DE CUANTAS");
 				System.out.println("\t(4)INTIMAR");
 				System.out.println("\t(5)REPORTE DEL SALDO TOTAL EN CAJA");
@@ -167,30 +167,42 @@ public class Menu {
 				
 				
 				switch (opcion) {
-				case '1': 	System.out.print("\nIngrese el nombre de usuario a borrar: ");
-							if(adminRegistrado.borrarUsuario(in.next()) != null){
+					case '1': {	
+						System.out.print("\nIngrese el nombre de usuario a borrar: ");
+						if(adminRegistrado.borrarUsuario(in.next(), manejadorUsuario.getUsuarios())){
+							System.out.println("usuario eliminado con todo Éxito");
+						}
+						else	System.out.println("USUARIO INEXISTENTE");
 								
-				
-								System.out.println("usuario eliminado con todo Éxito");
-							}
-								
-								
-							else
-								System.out.println("USUARIO INEXISTENTE");
+						break;
+					}
+									
+					case '2':{
+						try{
+							Usuario user = adminRegistrado.getMayorDeudor(manejadorUsuario.getUsuarios());
+							System.out.println("Dejar mensaje al usuario: " + user.getUserName());
+							String mensaje = in.next();
+							adminRegistrado.notificarDeudorMensaje(mensaje, manejadorUsuario.getUsuarios());
+						}
+						catch (NullPointerException e){
+							System.out.println("No hay usuarios morosos incobrables");
+						}
+						break;
 							
-					break;
-								
-				case '2':
-					System.out.println("Depositar");
-					break;
-				
-				default:
-					break;
+					}
+					
+					case '3':{
+						
+						break;
+					}
+					
+					default:
+						break;
 				}
 				
 				
 				System.out.println();
-				adminRegistrado.setUsuarios(manejadorUsuario.getUsuarios());
+				//adminRegistrado.setUsuarios(manejadorUsuario.getUsuarios());
 				opcion = 'X';
 			}
 			
@@ -214,7 +226,7 @@ public class Menu {
 					registrarse();
 					break;
 					
-				case '6':
+				case '3':
 					try {
 							System.out.print("\nIngrese DNI de usuario a borrar");			
 							manejadorUsuario.borrarUsuario(in.nextInt());
@@ -230,7 +242,7 @@ public class Menu {
 				System.out.println("\t\t\t\t\t\tUSUARIO: " + userRegistrado.getUserName());
 				System.out.println("\t(1) RECUERAR PASS");
 				System.out.println("\t(2) DEPOSITAR");
-				System.out.println("\t(3) CERRAR CUENTA(si saldo es cero)");
+				System.out.println("\t(3) CERRAR CUENTA (si saldo es cero)");
 				System.out.println("\t(4) BORRARSE");
 				System.out.println("\t(X) SALIR");
 				opcion = in.next().toUpperCase().charAt(0);
@@ -252,14 +264,16 @@ public class Menu {
 			}
 			
 	
-		
-			
-		
 			
 			
 			System.out.println("\n\n\n\n");
 		}
 		
+		try {
+			manejadorUsuario.guardarListaUsuarios(PATH);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		for(Usuario usuario : manejadorUsuario.getUsuarios())
 			System.out.println("dni: " + usuario.toString());
 		

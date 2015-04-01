@@ -8,7 +8,7 @@ public class Usuario {
 	private String mail;
 	private String mensaje;
 	private Persona persona;
-	private boolean estadoUsuario;
+	private boolean estadoActivo;
 	
 	
 	
@@ -20,7 +20,7 @@ public class Usuario {
 		this.userName = userName;
 		this.mail = mail;
 		this.mensaje = "Defoult";
-		this.estadoUsuario = true;
+		this.estadoActivo = true;
 	}
 	
 	public Usuario (){
@@ -33,20 +33,20 @@ public class Usuario {
 		
 	}
 	
-	public void setCerrado(){
-		this.estadoUsuario = true;
+	public void setAbierto(){
+		this.estadoActivo = true;
 	}
 	
-	public void setAbierto (){
-		this.estadoUsuario = false;
+	public void setCerrado (){
+		this.estadoActivo = false;
 	}
 	
 	public void setEstado(boolean estado){
-		this.estadoUsuario = estado;
+		this.estadoActivo = estado;
 	}
 	
 	public boolean getEstado(){
-		return this.estadoUsuario;
+		return this.estadoActivo;
 	}
 	
 	
@@ -165,7 +165,7 @@ public class Usuario {
 	@Override
 	public String toString() {
 		return "Usuario [persona=" + persona.getNombre() + ", pass=" + pass.getPassDesencriptada() + ", userName="
-				+ userName + ", mail=" + mail + ", mensaje=" + mensaje + "  " + "Usuario Activo= " + estadoUsuario+ "]";
+				+ userName + ", mail=" + mail + ", mensaje=" + mensaje + "  " + "Usuario Activo= " + estadoActivo+ "]";
 	}
 	
 	

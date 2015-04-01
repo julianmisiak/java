@@ -9,33 +9,33 @@ import com.lumina.impl.FileHandler;
 public class Admin {
 	private String nombre;
 	private Password pass;
-	private HashSet<Usuario> usuarios;
+
 	
 	
 	
 	public Admin (String nombre, String pass){
 		this.nombre = nombre;
 		this.pass = new Password(pass);
-		usuarios = null;
+		
 	}
 	
 	public Admin (String nombre, Password pass){
 		this.nombre = nombre;
 		this.pass = pass;
-		usuarios = null;
+		
 
 	}
 	
 	public Admin(){
 		nombre = "administrador";
 		pass = new Password("C4P0MaFia");
-		usuarios = null;
+		
 
 	}
 	
-	public void setUsuarios (HashSet<Usuario> usuarios){
+	/*public void setUsuarios (HashSet<Usuario> usuarios){
 		this.usuarios = usuarios;
-	}
+	}*/
 	
 	//El admin tiene guardado la lista de usarios, por lo que puede eliminar cualquier usuario 
 	//y pedirle cosas a la lista. 
@@ -43,20 +43,26 @@ public class Admin {
 	
 	//Devuelve true si el usuario pasado por parametro
 	//es eliminado de la lista de usuarios.
-	public Usuario borrarUsuario(String nombreUsuarioABorrar){
-		for (Usuario user : this.usuarios){
+	
+	public boolean borrarUsuario(String nombreUsuarioABorrar, HashSet<Usuario> usuarios){
+		Usuario userACambiar;
+		for (Usuario user : usuarios){
 			if (user.getUserName().equals(nombreUsuarioABorrar))
 			{
-				user.setCerrado();
-				return user;
+				user.setAbierto();
+				return true;
 			}
 		}
-		return null;
+		
+		
+	
+		
+			return false;
 	}
 	
 	
-	public void reporteDeCuentas(){
-		for (Usuario user : this.usuarios){
+	public void reporteDeCuentas(HashSet<Usuario> usuarios){
+		for (Usuario user : usuarios){
 			System.out.println("Usuario: " + user.getUserName() + "\tNumero de cuenta: " + user.getPersona().getCuenta()
 								+ "\n\tTipo: " + " " + "\n\tSaldo: " + user.getPersona().getCuenta().getSaldo() 
 								+ "\n\t Estado cuenta: " + user.getPersona().getCuenta().isCuenta()
@@ -67,11 +73,11 @@ public class Admin {
 	}
 	
 	
-	public float getPorcenCuentasCerradas() {
-		int totalCuentas = this.usuarios.size();
+	public float getPorcenCuentasCerradas(HashSet<Usuario> usuarios) {
+		int totalCuentas = usuarios.size();
 		int cantidadCuentasCerradas = 0;
 
-		for (Usuario user : this.usuarios) {
+		for (Usuario user : usuarios) {
 			if (user.getPersona().getCuenta().isCuenta()) {
 				cantidadCuentasCerradas++;
 
@@ -92,19 +98,19 @@ public class Admin {
 		return this.pass;
 	}
 	
-	public float getCuentasConDeuda(){
+	public float getCuentasConDeuda(HashSet<Usuario> usuarios){
 		int cont=0;
-		for (Usuario user : this.usuarios){
+		for (Usuario user : usuarios){
 			if (user.getPersona().getCuenta().getSaldo().compareTo(new BigDecimal(0)) < 0 )
 				cont++;			
 		}		
-		return ((float)cont*(float)100/(float)this.usuarios.size());
+		return ((float)cont*(float)100/(float) usuarios.size());
 	}
 	
 	
-	public void verCuentasSaldoPositivo(){
+	public void verCuentasSaldoPositivo(HashSet<Usuario> usuarios){
 		System.out.println("Cuentas Saldo positivo: ");
-		for (Usuario user : this.usuarios){
+		for (Usuario user : usuarios){
 			if (user.getPersona().getCuenta().getSaldo().compareTo(new BigDecimal(0)) > 0 ){
 				System.out.println("\t" + user);
 			}
@@ -112,11 +118,11 @@ public class Admin {
 		
 	}
 	
-	public Usuario getMayorDeudor(){
+	public Usuario getMayorDeudor(HashSet<Usuario> usuarios){
 		BigDecimal saldoNegativo = new BigDecimal(0);
 		Usuario deudor = null;
 		
-		for (Usuario user : this.usuarios){
+		for (Usuario user : usuarios){
 			if (user.getPersona().getCuenta().getSaldo().compareTo(saldoNegativo) < 0  ){
 				saldoNegativo = user.getPersona().getCuenta().getSaldo();
 				deudor = user;
@@ -127,17 +133,17 @@ public class Admin {
 	}
 	
 	
-	public void notificarDeudorMensaje(String mensaje){
-		Usuario deudor = getMayorDeudor();
+	public void notificarDeudorMensaje(String mensaje, HashSet<Usuario> usuarios){
+		Usuario deudor = getMayorDeudor(usuarios);
 		
 		deudor.setMensaje(mensaje);
 		
 	}
 	
 	
-	public BigDecimal getSaldoTotal() {
+	public BigDecimal getSaldoTotal(HashSet<Usuario> usuarios) {
 		BigDecimal saldoTotal = new BigDecimal(0);
-		for (Usuario user : this.usuarios) {
+		for (Usuario user : usuarios) {
 			saldoTotal = saldoTotal.add(user.getPersona().getCuenta().getSaldo());
 		}
 
@@ -145,11 +151,11 @@ public class Admin {
 	}
 	
 	
-	public void verGananciasPerdidas(){
+	public void verGananciasPerdidas(HashSet<Usuario> usuarios){
 		BigDecimal ganancia = new BigDecimal(0);
 		BigDecimal perdida = new BigDecimal(0);
 		
-		for (Usuario user : this.usuarios){
+		for (Usuario user : usuarios){
 			if (user.getPersona().getCuenta().getSaldo().compareTo(new BigDecimal(0)) < 0 ){
 				perdida = perdida.add(user.getPersona().getCuenta().getSaldo());
 				
@@ -163,9 +169,9 @@ public class Admin {
 	}
 	
 	
-	public void cerrarCuentasSaldoNegativo(){
+	public void cerrarCuentasSaldoNegativo(HashSet<Usuario> usuarios){
 		
-		for (Usuario user : this.usuarios){
+		for (Usuario user : usuarios){
 			if (user.getPersona().getCuenta().getSaldo().compareTo(new BigDecimal(0)) < 0 ){
 				user.getPersona().getCuenta().cerrarCuenta();
 				
@@ -175,8 +181,8 @@ public class Admin {
 		
 	}
 	
-	public void cerrarCuenta(String usuario){
-		for (Usuario user : this.usuarios){
+	public void cerrarCuenta(String usuario, HashSet<Usuario> usuarios){
+		for (Usuario user : usuarios){
 			if (user.getUserName().equals(usuario)){
 				user.getPersona().getCuenta().setCuenta(true);
 			}
@@ -184,18 +190,18 @@ public class Admin {
 	}
 	
 	
-	public void importarArchivo(String path) throws Exception{
+	public void importarArchivo(String path, HashSet<Usuario> usuarios) throws Exception{
 
 		
 		FileHandler manejadorUsuario = new FileHandler();
 		manejadorUsuario.cargarUsuariosDesdeArchivo(path);
-		this.usuarios =  manejadorUsuario.getUsuarios();
+		usuarios =  manejadorUsuario.getUsuarios();
 	}
 	
 	
-	public void exportarUsuarios(String path) throws IOException {
+	public void exportarUsuarios(String path, HashSet<Usuario> usuarios) throws IOException {
 		FileHandler manejadorUsuario = new FileHandler();
-		manejadorUsuario.setUsuarios(this.usuarios);
+		manejadorUsuario.setUsuarios(usuarios);
 		manejadorUsuario.guardarListaUsuarios(path);
 
 	}
