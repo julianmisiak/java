@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<psf version="2.0">
+<provider id="org.eclipse.team.svn.core.svnnature">
+<project reference="1.0.1,https://svn/escuela/Codigo/ObjetosConOracle,ObjetosConOracle,90575fc2fbd200141939df8fe78bc32e;https://svn/escuela/Codigo/;https://svn/escuela/Codigo/;branches;tags;trunk;true;6588f168-4818-4ddb-9655-2cfe943d2ca2;https://svn/escuela;;false;;;0"/>
+</provider>
+</psf>
